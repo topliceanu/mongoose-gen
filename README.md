@@ -49,7 +49,7 @@ book.json
 	fs.readFile('book.json', 'UTF-8', function (err, data) {
 		if (err) throw err;
 		try {
-			var json = JSON.decode(data);
+			var json = JSON.parse(data);
 			var Book = generator.schema('Book', json);
 			/* 
 				Book is an instance of type mongoose.Model
@@ -61,6 +61,8 @@ book.json
 			throw exception;
 		}
 	});
+
+For more examples of use, see the tests in `test/index.js`
 
 
 Supported Schema Types and Options
