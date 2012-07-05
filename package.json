@@ -1,0 +1,24 @@
+{
+  "author": "alexandru topliceanu <alexandru.topliceanu@gmail.com> (https://github.com/topliceanu)",
+  "name": "mongoose-gen",
+  "description": "generates mongoose schemas from json documents, supports DBRefs and Arrays of DBRef",
+  "version": "0.0.1",
+  "homepage": "https://github.com/topliceanu/mongoose-gen",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/topliceanu/mongoose-gen.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+		"mocha": "*",
+		"mongoose": "*"
+	},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "0.6"
+  }
+}
