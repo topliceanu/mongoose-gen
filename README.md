@@ -108,6 +108,8 @@ Types are expected as strings in the json document and will be converted acordin
     - _validate_: String - identifier of a previously registered getter
 
 
+**NOTE** Only the types and options defined above are permitted, unrecognized values are whitelisted or generate and exception!
+
 
 Setters, Getters, Defaults and Validators
 -------------------------------
@@ -128,6 +130,14 @@ The registered name are global to all generated schemas so you can reuse them.
 
 
 In the `usage` section above you can see an example of defining a validator.
+
+
+Inspiration
+-----------
+
+* [mongoose-from-json-schema](https://github.com/work-in-progress/mongoose-from-json-schema)
+
+* [json-mongoose-schemadef](https://github.com/adityab/json-mongoose-schemadef)
 
 
 Licence

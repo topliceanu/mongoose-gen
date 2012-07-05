@@ -1,1 +1,1 @@
-module.exports = require('./lib/mongoose-gen.js');
+module.exports = require('./lib/generator.js');
