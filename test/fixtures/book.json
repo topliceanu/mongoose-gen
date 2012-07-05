@@ -1,0 +1,13 @@
+{
+	"title": {
+		"type": "String",
+		"required": true,
+		"index": true
+	},
+	"author": {
+		"type": "ObjectId",
+		"ref": "Author",
+		"required": true,
+		"index": true
+	}
+}
