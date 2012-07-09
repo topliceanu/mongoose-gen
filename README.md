@@ -1,5 +1,6 @@
 mongoose-gen
 ============
+[![Build Status](https://secure.travis-ci.org/topliceanu/mongoose-gen.png?branch=master)](http://travis-ci.org/topliceanu/mongoose-gen)
 
 
 Gist
