@@ -94,14 +94,13 @@ describe( 'mongoose schema generator', function () {
 
 
 describe('convert the json into a mongoose schema', function () {
+
 	before( function (next) {
 		var that = this;
 		fs.readFile('./test/fixtures/descriptor.json', 'UTF-8', function (err, data) {
 			if (err) throw err;
 			try {
-				var object = JSON.parse(data);
-				that.definition = generator._convert(object);
-				that.Model = generator.schema('Test', object);
+				that.descriptor = JSON.parse(data);
 				return next();
 			}
 			catch (ex) {
@@ -110,16 +109,32 @@ describe('convert the json into a mongoose schema', function () {
 		});
 	});
 
+	it('should not work if it does not have a connection', function () {
+		assert.throws( function () {
+			generator.schema('Test', this.descriptor);
+		});
+	});
+
+	it('should set a correct connection object', function () {
+		assert.doesNotThrow( function () {
+			generator.setConnection(mongoose);
+		});
+	});
+
 	it('should return a mongoose.Model instance', function () {
+		var definition = generator._convert(this.descriptor);
+		this.Model = generator.schema('Test', this.descriptor);
 		assert.ok(util.is('Function', this.Model));
 	});
 
-	it('should permit creating a new object', function () {
+	it('should permit creating a new object', function (done) {
 		var doc = new this.Model();	
 		assert.equal(doc.prop1, 'default');
 		assert.equal(doc.prop2, 1);
 		assert.equal(doc.prop3, true);
 		assert.equal(doc.prop4.getTime(), (new Date(111111111111111)).getTime());
 		assert.equal(doc.prop5.toString('UTF-8'), 'default');
+		doc.save();
+		done();
 	});
 });

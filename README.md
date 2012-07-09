@@ -20,11 +20,11 @@ Development and Running Tests
 	git clone git@github.com:topliceanu/mongoose-gen.git
 	cd mongoose-gen
 	npm install
-	npm test	
+	npm test
 
 
-Usage
------
+Usage Example
+-------------
 
 book.json
 
@@ -35,12 +35,16 @@ book.json
 	}
 
 
- index.js
+index.js
  
 	var generator = require('mongoose-gen');
 	var fs = require('fs');
 
+	var mongoose = require('mongoose');
+	mongoose.connect('mongodb://localhost/test');
+
 	// configuration
+	generator.setConnection(mongoose); // make sure you connected
 	generator.setValidator('validateBookYear', function (value) {
 		return true;
 	});
@@ -111,6 +115,22 @@ Types are expected as strings in the json document and will be converted acordin
 
 
 **NOTE** Only the types and options defined above are permitted, unrecognized values are whitelisted or generate and exception!
+
+
+API
+---
+
+	generator.setConnection(mongoose: mongoose.Connection): undefined // REQUIRED before compiling a json descriptor
+
+	generator.setValidator(validator: Function): undefined
+
+	generator.setDefault(default: Function): undefined
+
+	generator.setSetter(getter: Function): undefined
+
+	generator.setGetter(setter: Function): undefined
+
+	generator.schema(name: String, json: Object): mongoose.Model
 
 
 Setters, Getters, Defaults and Validators

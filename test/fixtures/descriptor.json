@@ -1,9 +1,9 @@
 {
-	"prop1": {"type": "String", "lowercase": true, "uppercase": false, "trim": true, "match": "^test$", "enum": ["test-me", "test-you"], "required": true, "select": true, "index": true, "default": "defaultString", "get": "customGet", "set": "customSet", "validate": "customValidator"},
+	"prop1": {"type": "String", "lowercase": true, "uppercase": false, "trim": true, "match": "^default$", "enum": ["default"], "required": true, "select": true, "index": true, "default": "defaultString", "get": "customGet", "set": "customSet", "validate": "customValidator"},
 	"prop2": {"type": "Number", "min": 0, "max": 1000, "enum": [1,2,3,4,5], "required": true, "select": true, "index": true, "default": "defaultNumber", "get": "customGet", "set": "customSet", "validate": "customValidator"},
 	"prop3": {"type": "Boolean", "required": true, "select": true, "index": true, "default": "defaultBoolean", "get": "customGet", "set": "customSet", "validate": "customValidator"},
 	"prop4": {"type": "Date", "required": true, "select": true, "index": true, "default": "defaultDate", "get": "customGet", "set": "customSet", "validate": "customValidator"},
 	"prop5": {"type": "Buffer", "required": true, "select": true, "index": true, "default": "defaultBuffer", "get": "customGet", "set": "customSet", "validate": "customValidator"},
-	"prop6": {"type": "ObjectId", "ref": "SomeOtherType", "required": true, "select": true, "index": true, "get": "customGet", "set": "customSet", "validate": "customValidator"},
+	"prop6": {"type": "ObjectId", "ref": "SomeOtherType", "required": false, "select": true, "index": true, "get": "customGet", "set": "customSet", "validate": "customValidator"},
 	"prop7": {"type": "Mixed"}
 }
