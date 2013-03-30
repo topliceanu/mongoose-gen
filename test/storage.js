@@ -46,3 +46,70 @@ describe('Mongoose-gen disk storage', function () {
         });
     });
 });
+
+describe('Cross model storage', function () {
+
+    beforeEach(function () {
+        generator.setConnection(mongoose.connection);
+
+        // Define schemas.
+        var plainSchema = new mongoose.Schema({
+            'key': {type: String}
+        });
+        var genSchema = {"key": {"type": "String"}};
+
+        // Define models.
+        this.PlainModel = mongoose.model('PlainModel', plainSchema);
+        this.GenModel = generator.schema('GenModel', genSchema);
+    });
+
+    afterEach( function (done) {
+        // Cleanup the collections.
+        var _this = this;
+        this.PlainModel.collection.remove( function (err) {
+            if (err) return done(err);
+            _this.GenModel.collection.remove(done);
+        });
+    });
+
+    it('should store data for both normally created models and '+
+       '`mongoose-gen` created models the same way', function (done) {
+        var _this = this;
+
+        // Create instances.
+        var plain = new this.PlainModel({key: 'plain'});
+        var gen = new this.GenModel({key: 'gen'});
+
+        // Store the instances.
+        plain.save( function (err) {
+            if(err) {
+                return done(err);
+            }
+            assert.ok(util.is('String', plain.id), 'plain model is saved!');
+
+            gen.save( function (err) {
+                if (err) {
+                    return done(err);
+                }
+                assert.ok(util.is('String', gen.id), 'gen model is saved!');
+
+                // Check if the data is persisted.
+                _this.PlainModel.find( function (err, models) {
+                    if (err) return done(err);
+                    if (!models || !models.length || models.length !== 1)
+                        return done(new Error('no plain models stored!'));
+                    assert.equal(models[0].key, 'plain');
+
+                    _this.GenModel.find( function (err, models) {
+                        if (err) return done(err);
+                        if (!models || !models.length || models.length !== 1)
+                            return done(new Error('no gen models stored!'));
+                        assert.equal(models[0].key, 'gen');
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+});
