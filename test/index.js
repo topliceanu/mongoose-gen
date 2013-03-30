@@ -1,13 +1,15 @@
-var fs = require('fs');
 var assert = require('assert');
+var fs = require('fs');
+
 var mongoose = require('mongoose');
 
+var descriptor = require('./fixtures/descriptor.json');
 var generator = require('./../');
 var util = require('./../lib/util.js');
 
 
 describe( 'mongoose schema generator', function () {
-	
+
 	it('should add a validator', function () {
 		var customFn = function () {
 			return true;
@@ -65,7 +67,7 @@ describe( 'mongoose schema generator', function () {
 
 	it('should retrieve the correct function', function () {
 		generator._get('validator', 'customValidator')
-	});	
+	});
 
 	it('should match the correct type', function () {
 		var Type1 = generator._matchType('String')
@@ -83,9 +85,9 @@ describe( 'mongoose schema generator', function () {
 		assert.equal(Type5, Buffer);
 		assert.equal(Type6, mongoose.Schema.ObjectId);
 		assert.equal(Type7, mongoose.Types.Mixed);
-	});	
+	});
 
-	
+
 	it('should return a regexp when match options is given', function () {
 		var r = generator._check('match', '^test$');
 		assert.ok(r.test('test'));
@@ -95,23 +97,13 @@ describe( 'mongoose schema generator', function () {
 
 describe('convert the json into a mongoose schema', function () {
 
-	before( function (next) {
-		var that = this;
-		fs.readFile('./test/fixtures/descriptor.json', 'UTF-8', function (err, data) {
-			if (err) throw err;
-			try {
-				that.descriptor = JSON.parse(data);
-				return next();
-			}
-			catch (ex) {
-				throw ex;
-			}
-		});
+	before( function () {
+        this.descriptor = descriptor;
 	});
 
 	it('should not work if it does not have a connection', function () {
 		assert.throws( function () {
-			generator.schema('Test', this.descriptor);
+			generator.schema('TestSchema', this.descriptor);
 		});
 	});
 
@@ -123,12 +115,12 @@ describe('convert the json into a mongoose schema', function () {
 
 	it('should return a mongoose.Model instance', function () {
 		var definition = generator._convert(this.descriptor);
-		this.Model = generator.schema('Test', this.descriptor);
+		this.Model = generator.schema('TestSchema', this.descriptor);
 		assert.ok(util.is('Function', this.Model));
 	});
 
 	it('should permit creating a new object', function (done) {
-		var doc = new this.Model();	
+		var doc = new this.Model();
 		assert.equal(doc.prop1, 'default');
 		assert.equal(doc.prop2, 1);
 		assert.equal(doc.prop3, true);
