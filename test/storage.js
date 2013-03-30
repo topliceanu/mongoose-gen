@@ -11,8 +11,8 @@ describe('Mongoose-gen disk storage', function () {
     before(function () {
         // NOTE: change the connection string if you want to use another
         // database or host.
-        mongoose.connect('mongodb://localhost:27017/mongoose-gen-tests');
-        generator.setConnection(mongoose);
+        this.connection = mongoose.connect('mongodb://localhost:27017/mongoose-gen-tests');
+        generator.setConnection(this.connection);
 		this.Model = generator.schema('Test', descriptor);
     });
 
@@ -45,5 +45,4 @@ describe('Mongoose-gen disk storage', function () {
             });
         });
     });
-
 });
