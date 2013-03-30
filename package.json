@@ -2,7 +2,7 @@
   "author": "alexandru topliceanu <alexandru.topliceanu@gmail.com> (https://github.com/topliceanu)",
   "name": "mongoose-gen",
   "description": "generates mongoose schemas from json documents, supports DBRefs and Arrays of DBRef",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/topliceanu/mongoose-gen",
   "repository": {
     "type": "git",
