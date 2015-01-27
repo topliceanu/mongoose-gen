@@ -35,7 +35,7 @@
     "jshint": "2.6.0",
     "mocha": "2.1.0",
     "mocha-lcov-reporter": "0.0.1",
-    "q": "^1.1.2"
+    "q": "1.1.2"
   },
   "optionalDependencies": {},
   "engines": {
