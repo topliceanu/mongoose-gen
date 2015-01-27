@@ -78,7 +78,7 @@ var BookModel = mongoose.model('Book', BookSchema);
 
 ## More Examples
 
-Examples are in the `/examples` directory. They all have instructions on __how to run and test them__.
+__TODO__ All examples have instructions on __how to run and test them__.
 
 - [/examples/basic-usage.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/basic-usage.js) shows how to add validation methods to your json schema, then checks if storing an retrieving data works.
 - [/examples/nested-models.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/nested-models.js) shows how to defined models with nested levels.
