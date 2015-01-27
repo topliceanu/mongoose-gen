@@ -185,6 +185,29 @@ var BookModel = mongoose.model('Book', BookSchema);
 
 The reason for this change is that, exposing the Schema object, futher enhancing the schema is normal, whereas in v0.x.x versions a more hackish approach is needed.
 
+## Contributing
+
+1. Contributions to this project are more than welcomed!
+    - Anything from improving docs, code cleanup to advanced functionality is greatly appreciated.
+    - Before you start working on an ideea, please open an issue and describe in detail what you want to do and __why it's important__.
+    - You will get an answer in max 12h depending on your timezone.
+2. Fork the repo!
+3. If you use [vagrant](https://www.vagrantup.com/) then simply clone the repo into a folder then issue `$ vagrant up`
+    - if you don't use it, please consider learning it, it's easy to install and to get started with.
+    - If you don't use it, then you have to:
+         - install mongodb and have it running on `localhost:27017`.
+         - install node.js and all node packages required in development using `$ npm install`
+         - For reference, see `./vagrant_boostrap.sh` for instructions on how to setup all dependencies on a fresh ubuntu 14.04 machine.
+    - Run the tests to make sure you have a correct setup: `$ npm run test`
+4. Create a new branch and implement your feature.
+ - make sure you add tests for your feature. In the end __all tests have to pass__! To run test suite `$ npm run test`.
+ - make sure test coverage does not decrease. To open a browser window with the coverage report, run `$ npm run coverage`
+ - make sure you document your code and generated code looks ok.
+ - make sure code is linted (and tests too). Run `$ npm run lint`
+ - submit a pull request with your code.
+ - hit me up for a code review!
+5. Have my kindest thanks for making this project better!
+
 ## Alternatives
 
 * [mongoose-from-json-schema](https://github.com/work-in-progress/mongoose-from-json-schema)

@@ -22,7 +22,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "coveralls": "./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter | ./node_modules/.bin/coveralls",
-    "lint": "./node_modules/.bin/jshint ./lib"
+    "coverage": "./node_modules/.bin/mocha --require blanket --reporter html-cov | google-chrome",
+    "lint": "./node_modules/.bin/jshint ./lib ./test"
   },
   "dependencies": {
     "underscore": "1.7.0",

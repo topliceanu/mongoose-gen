@@ -83,7 +83,7 @@ describe('mongoose-gen', function () {
         });
 
         it('._get() should retrieve the correct function', function () {
-            generator._get('validator', 'customValidator')
+            generator._get('validator', 'customValidator');
         });
 
         it('._get() should throw an error when the required modifier is not found', function () {
@@ -93,13 +93,13 @@ describe('mongoose-gen', function () {
         });
 
         it('._matchType() should match the correct type', function () {
-            var Type1 = generator._matchType('String')
-            var Type2 = generator._matchType('Number')
-            var Type3 = generator._matchType('Boolean')
-            var Type4 = generator._matchType('Date')
-            var Type5 = generator._matchType('Buffer')
-            var Type6 = generator._matchType('ObjectId')
-            var Type7 = generator._matchType('Mixed')
+            var Type1 = generator._matchType('String');
+            var Type2 = generator._matchType('Number');
+            var Type3 = generator._matchType('Boolean');
+            var Type4 = generator._matchType('Date');
+            var Type5 = generator._matchType('Buffer');
+            var Type6 = generator._matchType('ObjectId');
+            var Type7 = generator._matchType('Mixed');
 
             assert.equal(Type1, String);
             assert.equal(Type2, Number);
@@ -129,7 +129,7 @@ describe('mongoose-gen', function () {
 
         it('._check() should throw for an unhandled type', function () {
             assert.throws(function () {
-                var r = generator._check('email')
+                var r = generator._check('email');
             }, Error, 'Email type is not registered');
         });
 
