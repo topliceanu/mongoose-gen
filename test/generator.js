@@ -3,6 +3,7 @@ var fs = require('fs');
 
 var _ = require('underscore');
 var mongoose = require('mongoose');
+var Q = require('q')
 
 var db = require('./fixtures/db');
 var descriptor = require('./fixtures/descriptor');
@@ -106,7 +107,7 @@ describe('mongoose-gen', function () {
             assert.equal(Type3, Boolean);
             assert.equal(Type4, Date);
             assert.equal(Type5, Buffer);
-            assert.equal(Type6, mongoose.Schema.Types.ObjectId);
+            assert.equal(Type6, mongoose.Schema.ObjectId);
             assert.equal(Type7, mongoose.Schema.Types.Mixed);
         });
 
@@ -177,14 +178,17 @@ describe('mongoose-gen', function () {
         });
     });
 
-    describe('Cross model storage', function () {
+    describe('DBRef support', function () {
 
         before(function () {
             // Define schemas.
             var PlainSchema = new mongoose.Schema({
                 'key': {type: String}
             });
-            var GenSchema = generator.getSchema({"key": {"type": "String"}});
+            var GenSchema = generator.getSchema({
+                "key": {"type": "String"},
+                "plain": {"type": 'ObjectId', ref: 'Plain'}
+            });
 
             // Define models.
             this.PlainModel = mongoose.model('PlainModel', PlainSchema);
@@ -195,46 +199,26 @@ describe('mongoose-gen', function () {
            '`mongoose-gen` created models the same way', function (done) {
             var _this = this;
 
-            // Create instances.
-            var plain = new this.PlainModel({key: 'plain'});
-            var gen = new this.GenModel({key: 'gen'});
-
-            // Store the instances.
-            plain.save(function (err) {
-                if(err) {
-                    return done(err);
-                }
-                assert.ok(_.isString(plain.id), 'plain model is saved!');
-
-                gen.save( function (err) {
-                    if (err) {
-                        return done(err);
-                    }
-                    assert.ok(_.isString(gen.id), 'gen model is saved!');
-
-                    // Check if the data is persisted.
-                    _this.PlainModel.find( function (err, models) {
-                        if (err) {
-                            return done(err);
-                        }
-                        if (!models || !models.length || models.length !== 1) {
-                            return done(new Error('no plain models stored!'));
-                        }
-                        assert.equal(models[0].key, 'plain');
-
-                        _this.GenModel.find( function (err, models) {
-                            if (err) {
-                                return done(err);
-                            }
-                            if (!models || !models.length || models.length !== 1) {
-                                return done(new Error('no gen models stored!'));
-                            }
-                            assert.equal(models[0].key, 'gen');
-                            done();
-                        });
-                    });
-                });
-            });
+            Q().then(function () {
+                _this.plain = new _this.PlainModel({key: 'plain'});
+                return Q.ninvoke(_this.plain, 'save');
+            }).then(function () {
+                _this.gen = new _this.GenModel({key: 'gen', plain: _this.plain});
+                return Q.ninvoke(_this.gen, 'save');
+            }).then(function () {
+                return Q.all([
+                    Q.ninvoke(_this.PlainModel, 'findOne'),
+                    Q.ninvoke(_this.GenModel, 'findOne')
+                ])
+            }).spread(function (plain, gen) {
+                assert.ok(gen.id, 'doc should have been stored');
+                assert.equal(gen.key, 'gen', 'should have stored the key');
+                assert.equal(gen.plain, plain.id, 'should have linked the other document');
+                assert.ok(plain.id, 'doc should have been stored');
+                assert.equal(plain.key, 'plain', 'should have stored the key');
+            }).then(function () {
+                done();
+            }, done)
         });
 
         after(function (done) {
@@ -243,6 +227,44 @@ describe('mongoose-gen', function () {
             this.PlainModel.collection.remove( function (err) {
                 if (err) return done(err);
                 _this.GenModel.collection.remove(done);
+            });
+        });
+    });
+
+    describe('nested', function () {
+
+        it('should eneble deeply nested documents', function (done) {
+            var BlogPostSchema = generator.getSchema({
+                'title': {type: 'string'},
+                'body': {type: 'string'},
+                'comments': [{
+                    'text': {type: 'string'},
+                }]
+            });
+            BlogPostModel = mongoose.model('BlogPost', BlogPostSchema);
+
+            var data = {
+                'title': 'My awesome ideea',
+                'body': 'The secret to the universe is...',
+                'comments': [
+                    {'text': 'This is marvelous!'},
+                    {'text': 'Amazing!'}
+                ]
+            };
+            var newBlog = new BlogPostModel(data);
+            newBlog.save(function (error) {
+                if (error) return done(error);
+
+                BlogPostModel.findOne(function (error, blogPost) {
+                    if (error) return done(error);
+
+                    assert.equal(blogPost.title, data.title, 'same title');
+                    assert.equal(blogPost.body, data.body, 'same body');
+                    assert.equal(blogPost.comments.length, data.comments.length, 'same comments');
+                    assert.equal(blogPost.comments[0].text, data.comments[0].text);
+                    assert.equal(blogPost.comments[1].text, data.comments[1].text);
+                    done()
+                });
             });
         });
 

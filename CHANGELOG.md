@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.0.1 - Jan 27, 2015
+* Support for nested documents in json schemas.
+* Add jshint task for codebase and tests.
+* Add examples to the repo
+
 ## Version 1.0.0 - Jan 27, 2015
 * General cleanup of the api, implementation and tests.
 * Better interoperation with mongoose
