@@ -86,6 +86,12 @@ describe('mongoose-gen', function () {
             generator._get('validator', 'customValidator')
         });
 
+        it('._get() should throw an error when the required modifier is not found', function () {
+            assert.throws(function () {
+                generator._get('validator', 'undefinedValidator');
+            }, Error, 'Throws error when validator was not registered previously');
+        });
+
         it('._matchType() should match the correct type', function () {
             var Type1 = generator._matchType('String')
             var Type2 = generator._matchType('Number')
@@ -104,9 +110,27 @@ describe('mongoose-gen', function () {
             assert.equal(Type7, mongoose.Schema.Types.Mixed);
         });
 
+        it('._matchType() should throw when an unknown type is requested', function () {
+            assert.throws(function () {
+                var Type = generator.matchType('NumberLong');
+            }, Error, 'NumberLong is not yet defined as a type');
+        });
+
         it('._check() should return a regexp when match options is given', function () {
             var r = generator._check('match', '^test$');
             assert.ok(r.test('test'));
+        });
+
+        it('._check() should throw when regexp param is not string', function () {
+            assert.throws(function () {
+                var r = generator._check('match', 12345);
+            }, Error, 'Param for match is not string to be used with RegExp');
+        });
+
+        it('._check() should throw for an unhandled type', function () {
+            assert.throws(function () {
+                var r = generator._check('email')
+            }, Error, 'Email type is not registered');
         });
 
     });

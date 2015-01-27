@@ -35,7 +35,9 @@ npm install mongoose-gen --save
 
 ## Example
 
-In this example we will generate a `book` mongo collection, mongoose.Schema and Model from a simple json document `book.json`.
+In this example we will generate a `books` mongo collection, mongoose.Schema and Model from a simple json document `book.json`.
+
+To see the full range of options for the json document, see [/test/fixtures/descriptor.json](https://github.com/topliceanu/mongoose-gen/blob/master/test/fixtures/descriptor.json).
 
 _book.json_
 
@@ -153,8 +155,7 @@ The registered name are global to all generated schemas so you can reuse them.
 
 * [mongoose-from-json-schema](https://github.com/work-in-progress/mongoose-from-json-schema)
 * [json-mongoose-schemadef](https://github.com/adityab/json-mongoose-schemadef)
-* [json-schema-converter](https://github.com/Clever/json-schema-converter)
- - the best i've found, it can translate JSONSchema objects into mongoose.Schema valid parameter object.
+* [json-schema-converter](https://github.com/Clever/json-schema-converter) converts JSONSchema objects into valid parameter object for `new mongoose.Schema()`
 
 ## Licence
 
