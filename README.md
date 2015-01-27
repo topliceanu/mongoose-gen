@@ -151,6 +151,40 @@ The registered name are global to all generated schemas so you can reuse them.
     generator.addDefault( myDefault, function (value) { .. }); // return a new value
     generator.addValidator( myValidator, function (value) { .. }); // return Boolean
 
+## Upgrading to mongoose-gen v1.0.0 from previous v0.x.x
+
+The only major change is the replacing of the `.schema(modelName:String, descriptor:Object):mongoose.Model` method with the `.getSchema(descriptor:Object):mongoose.Schema` method.
+
+So whereas in v0.x.x code you would do
+
+```javascript
+var generator = require('mongoose-gen');
+var mongoose = require('mongoose');
+
+// configuration
+mongoose.connect('mongodb://localhost/test');
+generator.setConnection(mongoose);
+
+var jsonSchema = {name: {type: 'String', max: 200}}
+var BookModel = generator.schema('Book', jsonSchema);
+```
+
+In versions >1.0.0, the same result is achieved with:
+
+```javascript
+var generator = require('mongoose-gen');
+var mongoose = require('mongoose');
+
+// configuration
+mongoose.connect('mongodb://localhost/test');
+
+var jsonSchema = {name: {type: 'String', max: 200}}
+var BookSchema = generator.getSchema(jsonSchema);
+var BookModel = mongoose.model('Book', BookSchema);
+```
+
+The reason for this change is that, exposing the Schema object, futher enhancing the schema is normal, whereas in v0.x.x versions a more hackish approach is needed.
+
 ## Alternatives
 
 * [mongoose-from-json-schema](https://github.com/work-in-progress/mongoose-from-json-schema)
