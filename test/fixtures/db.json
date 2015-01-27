@@ -1,0 +1,5 @@
+{
+  "host": "localhost",
+  "port": 27017,
+  "name": "mongoose-gen-tests"
+}

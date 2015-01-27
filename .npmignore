@@ -1,0 +1,9 @@
+doc/
+coverage/
+examples/
+src/
+test/
+coffeelint.json
+LICENSE
+vagrant_bootstrap.sh
+Vagrantfile
