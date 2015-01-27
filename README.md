@@ -33,7 +33,7 @@ This module is intended to translate a configuration object into mongoose.Schema
 npm install mongoose-gen --save
 ```
 
-## Example
+## Examples
 
 In this example we will generate a `books` mongo collection, mongoose.Schema and Model from a simple json document `book.json`.
 
@@ -75,6 +75,14 @@ var BookSchema = generator.getSchema(bookJson);
 mongoose.connect('mongodb://localhost:27017/test-mongoose-gen');
 var BookModel = mongoose.model('Book', BookSchema);
 ```
+
+## More Examples
+
+Examples are in the `/examples` directory. They all have instructions on __how to run and test them__.
+
+- [/examples/basic-usage.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/basic-usage.js) shows how to add validation methods to your json schema, then checks if storing an retrieving data works.
+- [/examples/nested-models.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/nested-models.js) shows how to defined models with nested levels.
+- [/examples/using-dbrefs.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/using-dbrefs.js) shows how you can reference other models from the json schema.
 
 ## Supported Schema Types and Options
 

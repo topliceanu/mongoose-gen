@@ -1,6 +1,6 @@
 {
   "name": "mongoose-gen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "generates mongoose schemas from json documents",
   "homepage": "https://github.com/topliceanu/mongoose-gen",
   "license": "MIT",
@@ -34,15 +34,16 @@
     "coveralls": "2.11.2",
     "jshint": "2.6.0",
     "mocha": "2.1.0",
-    "mocha-lcov-reporter": "0.0.1"
+    "mocha-lcov-reporter": "0.0.1",
+    "q": "^1.1.2"
   },
   "optionalDependencies": {},
   "engines": {
     "node": ">0.10.0"
   },
   "config": {
-      "blanket": {
-          "pattern": "lib\/generator.js"
-      }
+    "blanket": {
+      "pattern": "lib/generator.js"
+    }
   }
 }
