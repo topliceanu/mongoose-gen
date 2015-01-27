@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.0.0
+* Fix bug: an instance of mongoose.Schema is somehow linked to the connection instance so it cannot be used for other connections.
+* `.getSchema()` now requires an instance of mongoose.Connection
+
 ## Version 1.0.2 - Jan 27, 2015
 * Fix nasty bug.
 

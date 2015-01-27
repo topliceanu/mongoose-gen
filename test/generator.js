@@ -139,7 +139,7 @@ describe('mongoose-gen', function () {
     describe('.getSchema()', function () {
 
         it('should generate a new Schema instance', function () {
-            var TestSchema = generator.getSchema(simpleDescriptor);
+            var TestSchema = generator.getSchema(simpleDescriptor, mongoose);
             assert.ok(TestSchema instanceof mongoose.Schema,
                       'should be instance of mongoose.Schema');
 
@@ -188,7 +188,7 @@ describe('mongoose-gen', function () {
             var GenSchema = generator.getSchema({
                 "key": {"type": "String"},
                 "plain": {"type": 'ObjectId', ref: 'Plain'}
-            });
+            }, mongoose);
 
             // Define models.
             this.PlainModel = mongoose.model('PlainModel', PlainSchema);
@@ -240,7 +240,7 @@ describe('mongoose-gen', function () {
                 'comments': [{
                     'text': {type: 'string'},
                 }]
-            });
+            }, mongoose);
             BlogPostModel = mongoose.model('BlogPost', BlogPostSchema);
 
             var data = {

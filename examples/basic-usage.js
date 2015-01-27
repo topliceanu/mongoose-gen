@@ -25,7 +25,7 @@ generator.setValidator('humanAge', function (value) {
     return (value > 0 && value < 130)
 });
 
-var UserSchema = generator.getSchema(userJson);
+var UserSchema = new mongoose.Schema(generator.convert(userJson));
 var UserModel = mongoose.model('User', UserSchema);
 
 var me = new UserModel({'fullName': 'me', 'age': 28});

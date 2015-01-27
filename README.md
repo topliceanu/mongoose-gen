@@ -69,7 +69,7 @@ generator.setValidator('validateBookYear', function (value) {
 });
 
 // Generate the Schema object.
-var BookSchema = generator.getSchema(bookJson);
+var BookSchema = new mongoose.Schema(generator.convert(bookJson));
 
 // Connect to mongodb and bind the book model.
 mongoose.connect('mongodb://localhost:27017/test-mongoose-gen');
@@ -140,7 +140,9 @@ Types are expected as strings in the json document and will be converted acordin
 
     generator.setGetter(setter: Function): undefined
 
-    generator.getSchema(json: Object): mongoose.Schema
+    generator.getSchema(json: Object, connection: mongoose.Connection): mongoose.Schema
+
+    generator.convert(json: Object): Object
 
 
 ## Setters, Getters, Defaults and Validators
@@ -161,7 +163,7 @@ The registered name are global to all generated schemas so you can reuse them.
 
 ## Upgrading to mongoose-gen v1.0.0 from previous v0.x.x
 
-The only major change is the replacing of the `.schema(modelName:String, descriptor:Object):mongoose.Model` method with the `.getSchema(descriptor:Object):mongoose.Schema` method.
+The only major change is the replacing of the `.schema(modelName:String, descriptor:Object):mongoose.Model` method with the `.convert(descriptor:Object):Object` method.
 
 So whereas in v0.x.x code you would do
 
@@ -187,7 +189,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
 var jsonSchema = {name: {type: 'String', max: 200}}
-var BookSchema = generator.getSchema(jsonSchema);
+var BookSchema = new mongoose.Schema(generator.convert(jsonSchema));
 var BookModel = mongoose.model('Book', BookSchema);
 ```
 
