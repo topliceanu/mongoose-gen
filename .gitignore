@@ -12,4 +12,6 @@ logs
 results
 
 node_modules
-npm-debug.log
+doc
+.vagrant
+coverage

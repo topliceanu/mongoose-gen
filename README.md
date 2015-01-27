@@ -1,77 +1,80 @@
-mongoose-gen
-============
-[![Build Status](https://secure.travis-ci.org/topliceanu/mongoose-gen.png?branch=master)](http://travis-ci.org/topliceanu/mongoose-gen)
+# mongoose-gen
 
+## Gist
 
-Gist
-----
+**mongoose-gen** generates mongoose.Schema instances from plain json documents.
 
-**mongoose-gen** generates mongoose schemas from json documents
+## History and Rationale
 
+This module started life as a way to persist user defined database schemas.
 
-Installation
-------------
+Backend as a Service (BaaS) products allow users to define their data entities entities through a web-based UI.
 
-    npm install mongoose-gen
+Basically users edit&save a configuration object which is then translated by the backend services into mongoose.js schemas.
 
+This module is intended to translate a configuration object into mongoose.Schema objects.
 
-Development and Running Tests
------------------------------
-	
-	git clone git@github.com:topliceanu/mongoose-gen.git
-	cd mongoose-gen
-	npm install
-	npm test
+## Status
 
+[![NPM](https://nodei.co/npm/mongoose-gen.png?downloads=true&stars=true)](https://nodei.co/npm/mongoose-gen/)
 
-Usage Example
--------------
+[![NPM](https://nodei.co/npm-dl/mongoose-gen.png?months=12)](https://nodei.co/npm-dl/mongoose-gen/)
 
-book.json
+| Indicator              |                                                                          |
+|:-----------------------|:-------------------------------------------------------------------------|
+| continuous integration | [![Build Status](https://travis-ci.org/topliceanu/mongoose-gen.svg?branch=master)](https://travis-ci.org/topliceanu/mongoose-gen) |
+| dependency management  | [![Dependency Status](https://david-dm.org/topliceanu/mongoose-gen.svg?style=flat)](https://david-dm.org/topliceanu/mongoose-gen) [![devDependency Status](https://david-dm.org/topliceanu/mongoose-gen/dev-status.svg?style=flat)](https://david-dm.org/topliceanu/mongoose-gen#info=devDependencies) |
+| code coverage          | [![Coverage Status](https://coveralls.io/repos/topliceanu/mongoose-gen/badge.svg?branch=master)](https://coveralls.io/r/topliceanu/mongoose-gen?branch=master) |
+| change log             | [CHANGELOG](https://github.com/topliceanu/mongoose-gen/blob/master/CHANGELOG.md) |
 
-	{
-		"title": {"type": "String", "trim": true, "index": true, "required": true},
-		"year": {"type": "Number", "max": 2012, "validate": "validateBookYear"},
-		"author": {"type": "ObjectId", "ref": "Author", "index": true, "required": true}
-	}
+## Installation
 
+```shell
+npm install mongoose-gen --save
+```
 
-index.js
- 
-	var generator = require('mongoose-gen');
-	var fs = require('fs');
+## Example
 
-	var mongoose = require('mongoose');
-	mongoose.connect('mongodb://localhost/test');
+In this example we will generate a `book` mongo collection, mongoose.Schema and Model from a simple json document `book.json`.
 
-	// configuration
-	generator.setConnection(mongoose); // make sure you connected
-	generator.setValidator('validateBookYear', function (value) {
-		return true;
-	});
+_book.json_
 
-	// load json
-	fs.readFile('book.json', 'UTF-8', function (err, data) {
-		if (err) throw err;
-		try {
-			var json = JSON.parse(data);
-			var Book = generator.schema('Book', json);
-			/* 
-				Book is an instance of type mongoose.Model
-				It has been registered with mongoose under the name 'Book', you can retrieve it by mongoose.model('Book');
-				If you need the Schema object, use Book.schema
-			*/
-		}
-		catch(exception) {
-			throw exception;
-		}
-	});
+```json
+{
+    "title": {"type": "String", "trim": true, "index": true, "required": true},
+    "year": {"type": "Number", "max": 2012, "validate": "validateBookYear"},
+    "author": {"type": "ObjectId", "ref": "Author", "index": true, "required": true}
+}
+```
 
-For more examples of use, see the tests in `test/index.js`
+_index.js_
 
+```javascript
+var fs = require('fs');
 
-Supported Schema Types and Options
-----------------------------------
+var mongoose = require('mongoose');
+var generator = require('mongoose-gen');
+
+// load json
+var data = fs.readFileSync('./book.json', {encoding: 'utf8'});
+var bookJson = JSON.parse(data);
+
+// In the above _book.json_ file there is a `validateBookYear` token.
+// mongoose-gen uses this token to lookup an actual validator function which
+// should be registered beforehand. This is how to register validators.
+generator.setValidator('validateBookYear', function (value) {
+    return (value <= 2015);
+});
+
+// Generate the Schema object.
+var BookSchema = generator.getSchema(bookJson);
+
+// Connect to mongodb and bind the book model.
+mongoose.connect('mongodb://localhost:27017/test-mongoose-gen');
+var BookModel = mongoose.model('Book', BookSchema);
+```
+
+## Supported Schema Types and Options
 
 **mongoose-gen** aims for the optimal transformation of json documents into mongoose schemas.
 
@@ -108,7 +111,7 @@ Types are expected as strings in the json document and will be converted acordin
     - required: Boolean
     - select: Boolean
     - _get_: String - identifier of a previously registered getter
-    - _set_: String - identifier of a previously registered setter 
+    - _set_: String - identifier of a previously registered setter
     - index: Boolean
     - unique: Boolean
     - sparse: Boolean
@@ -117,26 +120,21 @@ Types are expected as strings in the json document and will be converted acordin
 
 **NOTE** Only the types and options defined above are permitted, unrecognized values are whitelisted or generate and exception!
 
+## API
 
-API
----
+    generator.setValidator(validator: Function): undefined
 
-	generator.setConnection(mongoose: mongoose.Connection): undefined // REQUIRED before compiling a json descriptor
+    generator.setDefault(default: Function): undefined
 
-	generator.setValidator(validator: Function): undefined
+    generator.setSetter(getter: Function): undefined
 
-	generator.setDefault(default: Function): undefined
+    generator.setGetter(setter: Function): undefined
 
-	generator.setSetter(getter: Function): undefined
-
-	generator.setGetter(setter: Function): undefined
-
-	generator.schema(name: String, json: Object): mongoose.Model
+    generator.getSchema(json: Object): mongoose.Schema
 
 
-Setters, Getters, Defaults and Validators
--------------------------------
-	
+## Setters, Getters, Defaults and Validators
+
 Setters, Getters, Defaults and Validators must be pre-registered as such with the `generator` instance.
 
 **mongoose-gen** uses the name under which these were registered to look them up and add them to the mongoose.Schema
@@ -144,35 +142,41 @@ Setters, Getters, Defaults and Validators must be pre-registered as such with th
 The registered name are global to all generated schemas so you can reuse them.
 
 
-	var generator = require('mongoose-gen');
+    var generator = require('mongoose-gen');
 
-	generator.addSetter( mySetter, function (value) { .. }); // return a new value
-	generator.addGetter( myGetter, function (value) { .. }); // return a new value
-	generator.addDefault( myDefault, function (value) { .. }); // return a new value
-	generator.addValidator( myValidator, function (value) { .. }); // return Boolean
+    generator.addSetter( mySetter, function (value) { .. }); // return a new value
+    generator.addGetter( myGetter, function (value) { .. }); // return a new value
+    generator.addDefault( myDefault, function (value) { .. }); // return a new value
+    generator.addValidator( myValidator, function (value) { .. }); // return Boolean
 
-
-In the `usage` section above you can see an example of defining a validator.
-
-
-Inspiration
------------
+## Alternatives
 
 * [mongoose-from-json-schema](https://github.com/work-in-progress/mongoose-from-json-schema)
-
 * [json-mongoose-schemadef](https://github.com/adityab/json-mongoose-schemadef)
+* [json-schema-converter](https://github.com/Clever/json-schema-converter)
+ - the best i've found, it can translate JSONSchema objects into mongoose.Schema valid parameter object.
 
-
-Licence
--------
+## Licence
 
 (The MIT License)
 
-Copyright (c) 2009-2011 Alex Topliceanu alexandru (dot) topliceanu (at) gmail (dot) com
+Copyright (c) 2012 Alexandru Topliceanu (alexandru.topliceanu@gmail.com)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

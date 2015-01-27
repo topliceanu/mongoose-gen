@@ -1,24 +1,47 @@
 {
-  "author": "alexandru topliceanu <alexandru.topliceanu@gmail.com> (https://github.com/topliceanu)",
   "name": "mongoose-gen",
-  "description": "generates mongoose schemas from json documents, supports DBRefs and Arrays of DBRef",
-  "version": "0.0.3",
+  "version": "1.0.0",
+  "description": "generates mongoose schemas from json documents",
   "homepage": "https://github.com/topliceanu/mongoose-gen",
+  "license": "MIT",
+  "keywords": [
+    "mongoose",
+    "mongodb",
+    "schema",
+    "json"
+  ],
+  "author": "alexandru topliceanu <alexandru.topliceanu@gmail.com> (http://alexandru.topliceanu.ro)",
   "repository": {
     "type": "git",
     "url": "git://github.com/topliceanu/mongoose-gen.git"
   },
+  "bugs": {
+    "url": "https://github.com/topliceanu/mongoose-gen/issues"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "./node_modules/.bin/mocha",
+    "coveralls": "./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter | ./node_modules/.bin/coveralls",
+    "lint": "./node_modules/.bin/jshint ./lib"
   },
   "dependencies": {
-		"mocha": "*",
-		"mongoose": "*"
-	},
-  "devDependencies": {},
+    "underscore": "1.7.0",
+    "mongoose": "3.8.21"
+  },
+  "devDependencies": {
+    "blanket": "1.1.6",
+    "coveralls": "2.11.2",
+    "jshint": "2.6.0",
+    "mocha": "2.1.0",
+    "mocha-lcov-reporter": "0.0.1"
+  },
   "optionalDependencies": {},
   "engines": {
-    "node": "0.6"
+    "node": ">0.10.0"
+  },
+  "config": {
+      "blanket": {
+          "pattern": "lib\/generator.js"
+      }
   }
 }
