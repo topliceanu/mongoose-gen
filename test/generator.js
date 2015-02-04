@@ -268,5 +268,45 @@ describe('mongoose-gen', function () {
             });
         });
 
+        // Cleanup the collection.
+        after(function (done) {
+            this.BlogPostModel.collection.remove(done);
+        });
+    });
+
+    describe('Array type support', function () {
+
+        it('should support plain Arrays in the descriptor object', function (done) {
+            var userDescriptor = {
+                name: {type: 'String'},
+                passions: {type: 'Array'}
+            };
+            var UserSchema = new mongoose.Schema(generator.convert(userDescriptor));
+            var UserModel = this.UserModel = mongoose.model('user', UserSchema);
+            var userData = {
+                name: 'me',
+                passions: ['running', 'swimming', 'biking']
+            }
+            var newUser = new UserModel(userData);
+            newUser.save(function (error) {
+                if (error) return done(error);
+
+                UserModel.findOne().where('name').equals('me').exec(function (error, foundUser) {
+                    if (error) return done(error);
+
+                    assert.equal(foundUser.name, userData.name, 'same name');
+                    assert.equal(foundUser.passions.length, userData.passions.length);
+                    assert.equal(foundUser.passions[0], userData.passions[0]);
+                    assert.equal(foundUser.passions[1], userData.passions[1]);
+                    assert.equal(foundUser.passions[2], userData.passions[2]);
+                    done();
+                });
+            });
+        });
+
+        // Cleanup the collection.
+        after(function (done) {
+            this.UserModel.collection.remove(done);
+        });
     });
 });
