@@ -274,6 +274,42 @@ describe('mongoose-gen', function () {
         });
     });
 
+    describe('getSchema()', function () {
+
+        it('should work just like the new api convert()', function (done) {
+            var productDescriptor = {
+                title: {type: 'String'},
+                price: {type: 'Number'}
+            };
+            var ProductSchema = generator.getSchema(productDescriptor, mongoose);
+            assert.ok(ProductSchema instanceof mongoose.Schema,
+                      'should be instance of mongoose.Schema');
+
+            var ProductModel = this.ProductModel = mongoose.model('product', ProductSchema);
+            var productData = {
+                title: 'awesome tshirt',
+                price: 25
+            }
+            var newProduct = new ProductModel(productData);
+            newProduct.save(function (error) {
+                if (error) return done(error);
+
+                ProductModel.findOne().exec(function (error, foundProduct) {
+                    if (error) return done(error);
+
+                    assert.equal(foundProduct.title, productData.title);
+                    assert.equal(foundProduct.price, productData.price);
+                    done();
+                });
+            });
+        });
+
+        // Cleanup the collection.
+        after(function (done) {
+            this.ProductModel.collection.remove(done);
+        });
+    });
+
     describe('Array type support', function () {
 
         it('should support plain Arrays in the descriptor object', function (done) {
