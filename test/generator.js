@@ -136,10 +136,10 @@ describe('mongoose-gen', function () {
 
     });
 
-    describe('.getSchema()', function () {
+    describe('.convert()', function () {
 
         it('should generate a new Schema instance', function () {
-            var TestSchema = generator.getSchema(simpleDescriptor, mongoose);
+            var TestSchema = new mongoose.Schema(generator.convert(simpleDescriptor));
             assert.ok(TestSchema instanceof mongoose.Schema,
                       'should be instance of mongoose.Schema');
 
@@ -185,10 +185,10 @@ describe('mongoose-gen', function () {
             var PlainSchema = new mongoose.Schema({
                 'key': {type: String}
             });
-            var GenSchema = generator.getSchema({
+            var GenSchema = new mongoose.Schema(generator.convert({
                 "key": {"type": "String"},
                 "plain": {"type": 'ObjectId', ref: 'Plain'}
-            }, mongoose);
+            }));
 
             // Define models.
             this.PlainModel = mongoose.model('PlainModel', PlainSchema);
@@ -233,15 +233,15 @@ describe('mongoose-gen', function () {
 
     describe('nested', function () {
 
-        it('should eneble deeply nested documents', function (done) {
-            var BlogPostSchema = generator.getSchema({
+        it('should enable deeply nested documents', function (done) {
+            var BlogPostSchema = new mongoose.Schema(generator.convert({
                 'title': {type: 'string'},
                 'body': {type: 'string'},
                 'comments': [{
                     'text': {type: 'string'},
                 }]
-            }, mongoose);
-            BlogPostModel = mongoose.model('BlogPost', BlogPostSchema);
+            }));
+            var BlogPostModel = this.BlogPostModel = mongoose.model('BlogPost', BlogPostSchema);
 
             var data = {
                 'title': 'My awesome ideea',
@@ -268,5 +268,81 @@ describe('mongoose-gen', function () {
             });
         });
 
+        // Cleanup the collection.
+        after(function (done) {
+            this.BlogPostModel.collection.remove(done);
+        });
+    });
+
+    describe('getSchema()', function () {
+
+        it('should work just like the new api convert()', function (done) {
+            var productDescriptor = {
+                title: {type: 'String'},
+                price: {type: 'Number'}
+            };
+            var ProductSchema = generator.getSchema(productDescriptor, mongoose);
+            assert.ok(ProductSchema instanceof mongoose.Schema,
+                      'should be instance of mongoose.Schema');
+
+            var ProductModel = this.ProductModel = mongoose.model('product', ProductSchema);
+            var productData = {
+                title: 'awesome tshirt',
+                price: 25
+            }
+            var newProduct = new ProductModel(productData);
+            newProduct.save(function (error) {
+                if (error) return done(error);
+
+                ProductModel.findOne().exec(function (error, foundProduct) {
+                    if (error) return done(error);
+
+                    assert.equal(foundProduct.title, productData.title);
+                    assert.equal(foundProduct.price, productData.price);
+                    done();
+                });
+            });
+        });
+
+        // Cleanup the collection.
+        after(function (done) {
+            this.ProductModel.collection.remove(done);
+        });
+    });
+
+    describe('Array type support', function () {
+
+        it('should support plain Arrays in the descriptor object', function (done) {
+            var userDescriptor = {
+                name: {type: 'String'},
+                passions: {type: 'Array'}
+            };
+            var UserSchema = new mongoose.Schema(generator.convert(userDescriptor));
+            var UserModel = this.UserModel = mongoose.model('user', UserSchema);
+            var userData = {
+                name: 'me',
+                passions: ['running', 'swimming', 'biking']
+            }
+            var newUser = new UserModel(userData);
+            newUser.save(function (error) {
+                if (error) return done(error);
+
+                UserModel.findOne().where('name').equals('me').exec(function (error, foundUser) {
+                    if (error) return done(error);
+
+                    assert.equal(foundUser.name, userData.name, 'same name');
+                    assert.equal(foundUser.passions.length, userData.passions.length);
+                    assert.equal(foundUser.passions[0], userData.passions[0]);
+                    assert.equal(foundUser.passions[1], userData.passions[1]);
+                    assert.equal(foundUser.passions[2], userData.passions[2]);
+                    done();
+                });
+            });
+        });
+
+        // Cleanup the collection.
+        after(function (done) {
+            this.UserModel.collection.remove(done);
+        });
     });
 });
