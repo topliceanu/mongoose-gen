@@ -274,6 +274,42 @@ describe('mongoose-gen', function () {
         });
     });
 
+    describe('Object support', function () {
+
+        it('should support generic object type', function (done) {
+            var TodoSchema = new mongoose.Schema(generator.convert({
+                'title': {type: 'string'},
+                'details': {type: 'object'},
+            }));
+            var TodoModel = this.TodoModel = mongoose.model('TodoPost', TodoSchema);
+
+            var data = {
+                'title': 'Introduce support for Object mongoose type',
+                'details': {
+                    'it': ['has', 'to', 'work']
+                }
+            };
+            var newTodo = new TodoModel(data);
+            newTodo.save(function (error) {
+                if (error) return done(error);
+
+                TodoModel.findOne(function (error, todo) {
+                    if (error) return done(error);
+
+                    assert.equal(todo.title, data.title, 'same title');
+                    assert.deepEqual(todo.details, data.details,
+                        'details object is stored as is');
+                    done()
+                });
+            });
+        });
+
+        // Cleanup the collection.
+        after(function (done) {
+            this.TodoModel.collection.remove(done);
+        });
+    });
+
     describe('getSchema()', function () {
 
         it('should work just like the new api convert()', function (done) {
