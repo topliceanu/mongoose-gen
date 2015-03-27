@@ -1,6 +1,9 @@
 # Changelog
 
-## Version 2.0.0
+## Version 2.1.0 - Mar 27, 2015
+* Enhancement: introduce support for Object type in schema definitions.
+
+## Version 2.0.0 - Jan 27, 2015
 * Fix bug: an instance of mongoose.Schema is somehow linked to the connection instance so it cannot be used for other connections.
 * `.getSchema()` now requires an instance of mongoose.Connection
 

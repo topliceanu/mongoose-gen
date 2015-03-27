@@ -20,4 +20,4 @@ su - vagrant -c "cd /home/vagrant/node-v$NODE_VERSION; make"
 su - vagrant -c "cd /home/vagrant/node-v$NODE_VERSION; sudo make install"
 
 # Install node dependencies.
-#su - vagrant -c "cd /vagrant/; npm install"
+su - vagrant -c "cd /vagrant/; npm install"
