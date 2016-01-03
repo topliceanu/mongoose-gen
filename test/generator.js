@@ -11,7 +11,7 @@ var generator = require('./../');
 var simpleDescriptor = require('./fixtures/simple-descriptor');
 
 
-describe('mongoose-gen', function () {
+describe('mongoose-gen integration', function () {
 
     before(function () {
         // NOTE: modify test/fixtures/db.json to change connection.

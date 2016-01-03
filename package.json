@@ -1,6 +1,6 @@
 {
   "name": "mongoose-gen",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "generates mongoose schemas from json documents",
   "homepage": "https://github.com/topliceanu/mongoose-gen",
   "license": "MIT",
@@ -26,8 +26,8 @@
     "lint": "./node_modules/.bin/jshint ./lib ./test"
   },
   "dependencies": {
-    "underscore": "1.7.0",
-    "mongoose": "3.8.21"
+    "underscore": "1.8.3",
+    "mongoose": "4.3.4"
   },
   "devDependencies": {
     "blanket": "1.1.6",
