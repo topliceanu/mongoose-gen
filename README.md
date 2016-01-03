@@ -81,7 +81,7 @@ var BookModel = mongoose.model('Book', BookSchema);
 __TODO__ All examples have instructions on __how to run and test them__.
 
 - [/examples/basic-usage.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/basic-usage.js) shows how to add validation methods to your json schema, then checks if storing an retrieving data works.
-- [/examples/nested-models.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/nested-models.js) shows how to defined models with nested levels.
+- [/examples/nested-models.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/nested-models.js) shows how to define schemas with nested levels.
 - [/examples/using-dbrefs.js](https://github.com/topliceanu/mongoose-gen/blob/master/examples/using-dbrefs.js) shows how you can reference other models from the json schema.
 
 ## Supported Schema Types and Options
@@ -160,6 +160,9 @@ The registered name are global to all generated schemas so you can reuse them.
     generator.addGetter( myGetter, function (value) { .. }); // return a new value
     generator.addDefault( myDefault, function (value) { .. }); // return a new value
     generator.addValidator( myValidator, function (value) { .. }); // return Boolean
+
+
+All nested documents support setters, getters, defaults and validators.
 
 ## Upgrading to mongoose-gen v1.0.0 from previous v0.x.x
 

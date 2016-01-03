@@ -1,6 +1,7 @@
 /**
  * This example shows how you can take a simple json document and
  * generate a mongoose.Schema instance from it.
+ * See test/generator.js for more details.
  *
  *
  * Use:
@@ -14,7 +15,7 @@ mongoose = require('mongoose');
 generator = require('mongoose-gen');
 
 
-mongoose.connect('mongodb://localhost:27017/test-mongoose-gen');
+mongoose.connect('mongodb://localhost:27017/test-mongoose-gen-basic');
 
 var userJson = {
     'fullName': {type: 'String'},
@@ -36,5 +37,6 @@ me.save(function (error) {
     UserModel.find(function (error, users) {
         if (error) return console.log('error: ', error);
         console.log('users:', users);
+        process.exit();
     });
 });

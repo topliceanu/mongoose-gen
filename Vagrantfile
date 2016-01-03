@@ -119,7 +119,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   chef.validation_key_path = "ORGNAME-validator.pem"
   # end
 
-  config.vm.provision :shell, path: "./vagrant_bootstrap.sh"
+  config.vm.provision :shell, path: "./vagrant_bootstrap.sh", privileged: false
 
   # If you're using the Opscode platform, your validator client is
   # ORGNAME-validator, replacing ORGNAME with your organization name.

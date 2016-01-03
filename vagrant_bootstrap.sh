@@ -1,23 +1,18 @@
 #!/usr/bin/env bash
 
-# Init.
-apt-get update
+## Install mongodb.
+#sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+#echo "deb http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+#sudo apt-get update
+#sudo apt-get install -y mongodb-org-server mongodb-org-shell
+#
+# Install nvm
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh | bash
+echo ". ~/.nvm/nvm.sh" >> ~/.bash_profile
+source ~/.bash_profile
 
-# Install mongodb.
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
-apt-get update
-apt-get install -y mongodb-org-server mongodb-org-shell
+# Install node v4.2.4.
+nvm install 4
 
-# Install node.
-NODE_VERSION=0.10.35
-apt-get -y install g++ gcc make
-wget http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz -O /tmp/nodejs.tar.gz
-tar -xzvf /tmp/nodejs.tar.gz -C /home/vagrant
-chown -R vagrant:vagrant /home/vagrant/node-v$NODE_VERSION
-su - vagrant -c "/home/vagrant/node-v$NODE_VERSION/configure"
-su - vagrant -c "cd /home/vagrant/node-v$NODE_VERSION; make"
-su - vagrant -c "cd /home/vagrant/node-v$NODE_VERSION; sudo make install"
-
-# Install node dependencies.
-su - vagrant -c "cd /vagrant/; npm install"
+# Install package dependencies.
+cd /vagrant; nvm use; npm install
